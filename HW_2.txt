@@ -1,0 +1,37 @@
+psql -U postgres
+
+CREATE database MusicOmega;
+CREATE user AdmMus with password '1234';
+
+ALTER database MusicOmega owner to AdmMus;
+
+psql -U AdmMus -d MusicOmega
+
+CREATE TABLE IF NOT EXISTS Performer (
+ID serial primary key,
+NAME text NOT NULL,
+ALIAS_NAME text
+);
+
+CREATE TABLE IF NOT EXISTS Album (
+ID serial primary key,
+TITLE varchar(120) NOT NULL,
+RELEASE_DATE integer,
+PERFORMER_ID integer references Performer(ID)
+);
+
+CREATE TABLE IF NOT EXISTS Track (
+ID serial primary key,
+NAME varchar(120) NOT NULL,
+DURATION numeric check(DURATION > 0),
+ALBUM_ID integer references Album(ID)
+);
+
+CREATE TABLE IF NOT EXISTS GENRE (
+ID serial primary key,
+NAME varchar(50) unique
+);
+
+
+ALTER TABLE Performer
+ADD Column Genre_ID integer references Genre(ID);
